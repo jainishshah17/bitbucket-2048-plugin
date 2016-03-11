@@ -1,3 +1,13 @@
+$(".js-example-basic-multiple-limit").select2({
+    maximumSelectionLength: 1
+});
+
+
+
+//alert($("#select-build").val());
+
+
+
 AJS.$(function() {
     var spinning = false;
     AJS.$('#save-user-credentials').on('click', function() {

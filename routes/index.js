@@ -2,6 +2,7 @@ var https = require('https');
 var http = require('http');
 var fs = require('fs');
 var parseString = require('xml2js').parseString;
+var url = require('url');
 
 module.exports = function (app, addon) {
     // Root route. This route will serve the `atlassian-connect.json` unless the
@@ -267,7 +268,8 @@ module.exports = function (app, addon) {
             }
             if (data == null) {
                 bambooRequestOptions('result', bitBucketUsername, function (options) {
-                    var reqGet = http.get(options, function (resGet) {
+                    var protocol = options.nameProtocol === "http" ? http : https;
+                    var reqGet = protocol.get(options, function (resGet) {
                         console.log('STATUS: ' + resGet.statusCode);
                         resGet.setEncoding('utf8');
                         var rawData = [];
@@ -355,7 +357,8 @@ module.exports = function (app, addon) {
             }
             if (data == null) {
                 artifactoryRequestOptions('build', bitBucketUsername, function (options) {
-                    var reqGet = http.request(options, function (resGet) {
+                    var protocol = options.nameProtocol === "http" ? http : https;
+                    var reqGet = protocol.request(options, function (resGet) {
                         console.log('STATUS: ' + resGet.statusCode);
                         resGet.setEncoding('utf8');
                         var rawData = [];
@@ -462,8 +465,8 @@ module.exports = function (app, addon) {
         bambooRequestOptions('queue/' + planKey, bitBucketUsername, function (options) {
             options.headers = {'Content-Length': Buffer.byteLength(post_data)};
             options.method = 'POST';
-
-            var post_req = http.request(options, function (res) {
+            var protocol = options.nameProtocol === "http" ? http : https;
+            var post_req = protocol.request(options, function (res) {
                 res.setEncoding('utf8');
                 res.on('data', function (chunk) {
                     console.log(chunk);
@@ -495,8 +498,8 @@ module.exports = function (app, addon) {
                 'Content-Length': Buffer.byteLength(post_data)
             };
             options.method = 'POST';
-
-            var post_req = http.request(options, function (res) {
+            var protocol = options.nameProtocol === "http" ? http : https;
+            var post_req = protocol.request(options, function (res) {
                 res.setEncoding('utf8');
                 res.on('data', function (chunk) {
                     //console.log(chunk);
@@ -532,7 +535,8 @@ module.exports = function (app, addon) {
             } else {
 
                 bambooRequestOptions('result/' + data.bambooBuildKey, bitBucketUsername, function (options) {
-                    var reqBambooGet = http.request(options, function (resBambooGet) {
+                    var protocol = options.nameProtocol === "http" ? http : https;
+                    var reqBambooGet = protocol.request(options, function (resBambooGet) {
                         console.log('STATUS: ' + resBambooGet.statusCode);
                         resBambooGet.setEncoding('utf8');
                         var rawData = [];
@@ -560,7 +564,8 @@ module.exports = function (app, addon) {
                                                 var number = buildInfo[key].buildNumber[0];
                                                 buildInfo[key].buildLink = buildInfo[key].link["0"].$.href.replace("rest/api/latest/result", "browse");
                                                 artifactoryRequestOptions('build/' + data.artifactoryBuild + "/" + number, bitBucketUsername, function (artifactooryOptions) {
-                                                    var reqGet = http.request(artifactooryOptions, function (resGet) {
+                                                    var artiProtocol = artifactooryOptions.nameProtocol === "http" ? http : https;
+                                                    var reqGet = artiProtocol.request(artifactooryOptions, function (resGet) {
                                                         console.log('STATUS: ' + resGet.statusCode);
                                                         resGet.setEncoding('utf8');
                                                         var rawData = [];
@@ -575,6 +580,16 @@ module.exports = function (app, addon) {
                                                                 buildInfo[key].artName = artBuildInfo.buildInfo.name;
                                                             } else {
                                                                 buildInfo[key].artName = " ";
+                                                            }
+                                                            if (artBuildInfo.buildInfo != undefined && artBuildInfo.buildInfo.principal != undefined) {
+                                                                buildInfo[key].principal = artBuildInfo.buildInfo.principal;
+                                                            } else {
+                                                                buildInfo[key].principal = " ";
+                                                            }
+                                                            if (artBuildInfo.buildInfo != undefined && artBuildInfo.buildInfo.buildAgent != undefined) {
+                                                                buildInfo[key].buildAgent = artBuildInfo.buildInfo.buildAgent;
+                                                            } else {
+                                                                buildInfo[key].buildAgent = " ";
                                                             }
                                                             if (artBuildInfo.buildInfo != undefined && artBuildInfo.buildInfo.number != undefined) {
                                                                 buildInfo[key].artBuildNumber = artBuildInfo.buildInfo.number;
@@ -763,11 +778,13 @@ module.exports = function (app, addon) {
             if (data == null) {
                 console.log(" not found");
             } else {
-                options = {
-                    host: data.url,
-                    port: '8085',
+                var host_url = url.parse(data.url);
+                 options = {
+                    host: host_url.hostname,
+                    port: host_url.port || 80,
                     path: '/rest/api/latest/' + path,
                     method: 'GET',
+                    nameProtocol: host_url.protocol.split(':')[0],
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -788,11 +805,13 @@ module.exports = function (app, addon) {
             if (data == null) {
                 console.log(" not found");
             } else {
+                var host_url = url.parse(data.url);
                 options = {
-                    host: data.url,
-                    port: 8081,
+                    host: host_url.hostname,
+                    port: host_url.port || 80,
                     path: '/artifactory/api/' + path,
                     method: 'GET',
+                    nameProtocol: host_url.protocol.split(':')[0],
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -803,21 +822,6 @@ module.exports = function (app, addon) {
             callback(options);
         });
     };
-
-    //function artifactoryRequestOptions(path) {
-    //    var options = {
-    //        host: 'artifactory-demo.inc.jfrog.local',
-    //        port: 8081,
-    //        path: '/artifactory/api/build' + path,
-    //        method: 'GET',
-    //        headers: {
-    //            'Content-Type': 'application/json'
-    //        },
-    //        auth: 'admin:password'
-    //    };
-    //    return options;
-    //}
-
 
     function requestBintrayPackageInfo(options, originalRes) {
         var bintrayReq = https.request(options, function (bintrayRes) {

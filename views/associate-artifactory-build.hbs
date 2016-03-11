@@ -1,4 +1,5 @@
 {{!< layout}}
+<div class="repo-admin">
 <div class="aui-page-panel-content main build">
     <section class="aui-page-panel-item">
         <h3>Artifactory Build</h3>
@@ -6,9 +7,11 @@
             <input type="hidden" name="action" value="associate-artifactory-build">
             <div class="field-group">
                 <label for="select-build">Select Build</label>
-                <select class="js-example-placeholder-single aui-style-default" id="select-build" name="select-build">{{#each builds}}
-                    <option>{{uri}}</option>
-                {{/each}}
+                <select class="js-example-basic-multiple-limit" id="select-build" name="select-build"
+                        style="width: 500px">
+                    {{#each builds}}
+                        <option>{{uri}}</option>
+                    {{/each}}
                 </select>
                 <div class="description">The relative build from Artifactory you'd like to associate</div>
             </div>
@@ -23,3 +26,5 @@
         </form>
     </section>
 </div>
+</div>
+
