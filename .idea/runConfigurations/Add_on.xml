@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Add on" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="/usr/local/bin/node" path-to-js-file="app.js" application-parameters="AC_LOCAL_BASE_URL=https://62968825.ngrok.com/" working-dir="$PROJECT_DIR$">
+    <envs>
+      <env name="DEBUG" value="bitbucket-bintray-plugin:*" />
+    </envs>
+    <browser url="http://localhost:3000/" />
+    <method />
+  </configuration>
+</component>

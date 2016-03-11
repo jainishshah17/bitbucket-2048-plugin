@@ -1,0 +1,31 @@
+{
+  "development": {
+    "bitbucket": true,
+    "port": 3000,
+    "errorTemplate": true,
+    "consumerKey": "SzLrhkDEmArss3jjVA",
+    "store": {
+      "adapter": "jugglingdb",
+      "type": "sqlite3",
+      "database": "store.db"
+    }
+  },
+  "production": {
+    "port": "$PORT",
+    "bitbucket": true,
+    "consumerKey": "SzLrhkDEmArss3jjVA",
+    "errorTemplate": true,
+    "localBaseUrl": "https://your-subdomain.herokuapp.com",
+    "store": {
+      "type": "postgres",
+      "url": "$DATABASE_URL"
+    },
+    "whitelist": [
+      "*.jira-dev.com",
+      "*.atlassian.net",
+      "*.atlassian.com",
+      "*.jira.com",
+      "bitbucket.org"
+    ]
+  }
+}

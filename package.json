@@ -1,0 +1,16 @@
+{
+  "name": "bitbucket-bintray-addon",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "AC_LOCAL_BASE_URL=https://62968825.ngrok.com/ node app.js"
+  },
+  "dependencies": {
+    "express": "~3.3.4",
+    "express-hbs": "*",
+    "static-expiry": ">=0.0.5",
+    "atlassian-connect-express-bitbucket": "*",
+    "jugglingdb": "0.2.x",
+    "jugglingdb-sqlite3": "latest"
+  }
+}

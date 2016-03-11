@@ -1,0 +1,104 @@
+{{!< layout}}
+<table class="aui" border="1">
+    <thead>
+    <tr>
+        <!--<th width="10%">-->
+        <!--<img src="https://raw.githubusercontent.com/jainishshah17/Images/master/jfrog.png" height="100px" width="100%">-->
+        <!--</th>-->
+        <!--<th colspan="3" width="30%"><img src="https://raw.githubusercontent.com/jainishshah17/Images/master/Bamboo.png"-->
+        <!--height="100px" width="100%"></th>-->
+        <!--<th colspan="3" width="30%"><img src="https://raw.githubusercontent.com/jainishshah17/Images/master/Artifactory.png"-->
+        <!--height="100px" width="100%"></th>-->
+        <!--<th colspan="4" width="30%"><img src="https://raw.githubusercontent.com/jainishshah17/Images/master/Bintray.png"-->
+        <!--height="100px" width="100%"></th>-->
+
+
+        <th colspan="3"  width="30%">
+            <div><span class="aui-avatar aui-avatar-xxxlarge">
+                    <span class="aui-avatar-inner">
+                        <img src="https://raw.githubusercontent.com/jainishshah17/Images/master/Bamboo.png">
+                    </span>
+                </span>
+                <button class="aui-button aui-button-primary" style="float: right;">
+                    <a href="../../triggerBuild/{{bambooBuildInfo.1.plan.0.$.key}}/{{bambooBuildInfo.1.bitBucketUsername}}" style="color: white">Triggre Build</a>
+                </button>
+            </div>
+        </th>
+        <th colspan="3"  width="40%"><span class="aui-avatar aui-avatar-xxxlarge">
+    <span class="aui-avatar-inner">
+        <img src="https://raw.githubusercontent.com/jainishshah17/Images/master/artifactory.png">
+    </span>
+</span></th>
+        <th colspan="4"  width="30%"><span class="aui-avatar aui-avatar-xxxlarge">
+    <span class="aui-avatar-inner">
+        <img src="https://raw.githubusercontent.com/jainishshah17/Images/master/bintray.png">
+    </span>
+</span></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>Number</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Build Info</th>
+        <th>Statuses</th>
+        <th>Download</th>
+        <th>Repository</th>
+        <th>Version</th>
+    </tr>
+    {{#each bambooBuildInfo}}
+        <tr>
+            <td>{{buildNumber}}</td>
+
+            <td><a href="{{buildLink}}" target="_blank">
+                {{#each plan}}
+                    {{$.name}}{{/each}}
+            </a>
+            </td>
+            <td>
+                {{#compare buildState "==" "Failed"}}
+                    <span class="aui-icon aui-icon-small aui-iconfont-remove" title="Failed"></span>
+                {{/compare}}
+                {{#compare buildState "==" "Successful"}}
+                    <span class="aui-icon aui-icon-small aui-iconfont-approve" title="Successful"></span>
+                {{/compare}}
+            </td>
+            <td>
+                {{#if uri.length}}
+                    <a href="{{uri}}" target="_blank"> Build Info</a>
+                {{/if}}
+            </td>
+            <td>
+                {{#each statuses}}
+                    <ul>
+                        <li>{{status}}</li>
+                    </ul>
+                {{/each}}
+            </td>
+            <td>
+                <a href="../../downloadArchive/{{bitBucketUsername}}/{{artName}}/{{artBuildNumber}}">
+                   <span class="aui-icon aui-icon-small aui-iconfont-file-zip" title="Download Build Artifacts Archive"></span>
+                </a>
+
+            </td>
+            <td>
+                {{#if package}}
+                    <a href="http://bintray.com/{{owner}}/{{repo}}/{{package}}" target="_blank">{{package}}</a>
+                {{/if}}
+            </td>
+            <td>
+                <span class="aui-lozenge aui-lozenge-subtle aui-lozenge-success"><a
+                        href="http://bintray.com/{{owner}}/{{repo}}/{{package}}/{{version}}"
+                        target="_blank">{{version}}</a></span>
+                {{#if version}}
+                    <a href="http://bintray.com/{{owner}}/{{repo}}/{{package}}/{{version}}#statistics" target="_blank"><span class="aui-icon aui-icon-small aui-iconfont-weblink" title="Statistics"></span></a>
+                {{/if}}
+                {{#if version}}
+                    <a href="http://bintray.com/{{owner}}/{{repo}}/{{package}}/{{version}}#release" target="_blank"><span class="aui-icon aui-icon-small aui-iconfont-details" title="Release Notes"></span></a>
+                {{/if}}
+            </td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
