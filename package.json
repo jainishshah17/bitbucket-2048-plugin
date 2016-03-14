@@ -11,6 +11,11 @@
     "static-expiry": ">=0.0.5",
     "atlassian-connect-express-bitbucket": "*",
     "jugglingdb": "0.2.x",
-    "jugglingdb-sqlite3": "latest"
+    "jugglingdb-sqlite3": "latest",
+    "http":"latest",
+    "https":"latest",
+    "url": "latest",
+    "fs":"latest",
+    "xml2js":"latest"
   }
 }

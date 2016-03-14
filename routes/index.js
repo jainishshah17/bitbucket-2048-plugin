@@ -620,7 +620,7 @@ module.exports = function (app, addon) {
                                                                 if ((data == null) || (data.bintrayPackage == null)) {
                                                                     console.log("Package not found!");
                                                                 } else {
-                                                                    var post_data = '[{"buildName":["' + buildInfo[key].artName.replace(/ /g, "%20") + '"]},{"buildNumber":["' + buildInfo[key].artBuildNumber + '"]}]';
+                                                                    var post_data = '[{"buildNumber":["' + buildInfo[key].artBuildNumber + '"]},{"buildName":["' + buildInfo[key].artName.replace(/ /g, "%20") + '"]}]';
                                                                     var path = 'search/attributes/' + data.bintrayPackage + 'versions';
                                                                     bintrayRequestOptionsPost(path, bitBucketUsername, post_data, function (options) {
                                                                         var post_req = https.request(options, function (resPost) {
