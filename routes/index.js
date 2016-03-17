@@ -430,7 +430,7 @@ module.exports = function (app, addon) {
             var BintrayPackage = getBintrayPackage();
             BintrayPackage.findOne({where: {bitBucketRepoUuid: repoUuid}}, function (err, data) {
                 if (err) {
-                    res.send('Error occurred while querying for an already existing associated Bintray package: ' + err.message);
+                    originalRes.send('Error occurred while querying for an already existing associated Bintray package: ' + err.message);
                     return;
                 }
                 if ((data == null) || (data.bintrayPackage == null)) {
@@ -528,7 +528,7 @@ module.exports = function (app, addon) {
         var buildInfo = [];
         BambooBuild.findOne({where: {bitBucketRepoUuid: repoUuid}}, function (err, data) {
             if (err) {
-                console.log('Error occurred while querying for an already existing associated Bamboo Build ' + err.message);
+                res.send('Error occurred while querying for an already existing associated Bamboo Build ' + err.message);
             }
             if (data == null) {
                 console.log("Bamboo build is not selected");
@@ -562,6 +562,7 @@ module.exports = function (app, addon) {
                                             (function (key) {
                                                 list_object.push(key);
                                                 var number = buildInfo[key].buildNumber[0];
+                                                buildInfo[key].bitBucketUsername = bitBucketUsername;
                                                 buildInfo[key].buildLink = buildInfo[key].link["0"].$.href.replace("rest/api/latest/result", "browse");
                                                 artifactoryRequestOptions('build/' + data.artifactoryBuild + "/" + number, bitBucketUsername, function (artifactooryOptions) {
                                                     var artiProtocol = artifactooryOptions.nameProtocol === "http" ? http : https;
@@ -640,7 +641,6 @@ module.exports = function (app, addon) {
                                                                                     buildInfo[key].repo = vesion[0].repo;
                                                                                     buildInfo[key].package = vesion[0].package;
                                                                                     buildInfo[key].owner = vesion[0].owner;
-                                                                                    buildInfo[key].bitBucketUsername = bitBucketUsername;
                                                                                 } else {
                                                                                     buildInfo[key].version = " ";
                                                                                     buildInfo[key].repo = " ";
