@@ -260,47 +260,48 @@ module.exports = function (app, addon) {
         var repoUuid = req.query['repoUuid'];
         var builds = [];
         console.log('FOUND UUID' + repoUuid);
-        var BambooBuild = getBambooBuild();
-        BambooBuild.findOne({where: {bitBucketRepoUuid: repoUuid}}, function (err, data) {
-            if (err) {
-                res.send('Error occurred while querying for an already existing associated Bamboo Build: ' + err.message);
-                return;
-            }
-            if (data == null) {
-                bambooRequestOptions('result', bitBucketUsername, function (options) {
-                    var protocol = options.nameProtocol === "http" ? http : https;
-                    var reqGet = protocol.get(options, function (resGet) {
-                        console.log('STATUS: ' + resGet.statusCode);
-                        resGet.setEncoding('utf8');
-                        var rawData = [];
-                        resGet.on('data', function (chunk) {
-                            rawData.push(chunk);
-                        });
-                        resGet.on('end', function (resGet) {
-                            reqGet.write(rawData);
-                            var chunk = rawData.join('');
-                            parseString(chunk, function (err, result) {
-                                var build_object_list = result.results.results["0"];
-                                build_list = JSON.parse(JSON.stringify(build_object_list.result));
-                                for (var key in build_list) {
-                                    var build = build_list[key];
-                                    builds.push({"buildKey": build.plan[0].$.key, "buildName": build.plan[0].$.name});
-                                }
-                            });
-                            res.render('associate-bamboo-build', {builds: builds});
-                        });
-                    });
-                    reqGet.on('error', function (e) {
-                        console.log('problem with request: ' + e.message);
-                    });
-                    reqGet.end();
-
+        bambooRequestOptions('result', bitBucketUsername, function (options) {
+            var protocol = options.nameProtocol === "http" ? http : https;
+            var reqGet = protocol.get(options, function (resGet) {
+                console.log('STATUS: ' + resGet.statusCode);
+                resGet.setEncoding('utf8');
+                var rawData = [];
+                resGet.on('data', function (chunk) {
+                    rawData.push(chunk);
                 });
+                resGet.on('end', function (resGet) {
+                    reqGet.write(rawData);
+                    var chunk = rawData.join('');
+                    parseString(chunk, function (err, result) {
+                        var build_object_list = result.results.results["0"];
+                        build_list = JSON.parse(JSON.stringify(build_object_list.result));
+                        for (var key in build_list) {
+                            var build = build_list[key];
+                            builds.push({"buildKey": build.plan[0].$.key, "buildName": build.plan[0].$.name});
+                        }
 
-            } else {
-                builds = [{"buildName": data.bambooBuildName, "buildKey": data.bambooBuildKey}];
-                res.render('associate-bamboo-build', {builds: builds});
-            }
+
+                        var BambooBuild = getBambooBuild();
+                        BambooBuild.findOne({where: {bitBucketRepoUuid: repoUuid}}, function (err, data) {
+                            if (err) {
+                                res.send('Error occurred while querying for an already existing associated Bamboo Build: ' + err.message);
+                                return;
+                            }
+                            if (data == null) {
+                                res.render('associate-bamboo-build', {builds: builds});
+
+                            } else {
+                                var selected = [{"buildName": data.bambooBuildName, "buildKey": data.bambooBuildKey}];
+                                res.render('associate-bamboo-build', {builds: builds, selected: selected});
+                            }
+                        });
+                    });
+                });
+            });
+            reqGet.on('error', function (e) {
+                console.log('problem with request: ' + e.message);
+            });
+            reqGet.end();
         });
     });
 
@@ -340,48 +341,47 @@ module.exports = function (app, addon) {
                 });
             }
         });
-        var builds = [{"buildName": bambooBuildName, "buildKey": null}];
-        res.render('associate-bamboo-build', {builds: builds});
-
+        var selected = [{"buildName": bambooBuildName, "buildKey": null}];
+        res.render('associate-bamboo-build', {selected: selected});
     });
     app.get('/associate-artifactory-build', addon.authenticate(), function (req, res) {
         var bitBucketUsername = req.query['bitBucketUsername'];
         var repoUuid = req.query['repoUuid'];
         var builds;
         console.log('FOUND UUID' + repoUuid);
-        var ArtifactoryBuild = getArtifactoryBuild();
-        ArtifactoryBuild.findOne({where: {bitBucketRepoUuid: repoUuid}}, function (err, data) {
-            if (err) {
-                res.send('Error occurred while querying for an already existing associated Artifactory Build: ' + err.message);
-                return;
-            }
-            if (data == null) {
-                artifactoryRequestOptions('build', bitBucketUsername, function (options) {
-                    var protocol = options.nameProtocol === "http" ? http : https;
-                    var reqGet = protocol.request(options, function (resGet) {
-                        console.log('STATUS: ' + resGet.statusCode);
-                        resGet.setEncoding('utf8');
-                        var rawData = [];
-                        resGet.on('data', function (chunk) {
-                            rawData.push(chunk);
-                        });
-                        resGet.on('end', function (resGet) {
-                            var chunk = rawData.join('');
-                            reqGet.write(chunk);
-                            var list = JSON.parse(chunk);
-                            builds = list["builds"];
-                            res.render('associate-artifactory-build', {builds: builds});
-                        });
-                    });
-                    reqGet.on('error', function (e) {
-                        console.log('problem with request: ' + e.message);
-                    });
-                    reqGet.end();
+        artifactoryRequestOptions('build', bitBucketUsername, function (options) {
+            var protocol = options.nameProtocol === "http" ? http : https;
+            var reqGet = protocol.request(options, function (resGet) {
+                console.log('STATUS: ' + resGet.statusCode);
+                resGet.setEncoding('utf8');
+                var rawData = [];
+                resGet.on('data', function (chunk) {
+                    rawData.push(chunk);
                 });
-            } else {
-                builds = [{'uri': data.artifactoryBuild}];
-                res.render('associate-artifactory-build', {builds: builds})
-            }
+                resGet.on('end', function (resGet) {
+                    var chunk = rawData.join('');
+                    reqGet.write(chunk);
+                    var list = JSON.parse(chunk);
+                    builds = list["builds"];
+                    var ArtifactoryBuild = getArtifactoryBuild();
+                    ArtifactoryBuild.findOne({where: {bitBucketRepoUuid: repoUuid}}, function (err, data) {
+                        if (err) {
+                            res.send('Error occurred while querying for an already existing associated Artifactory Build: ' + err.message);
+                            return;
+                        }
+                        if (data == null) {
+                            res.render('associate-artifactory-build', {builds: builds})
+                        } else {
+                            var selected = [{'uri': data.artifactoryBuild}];
+                            res.render('associate-artifactory-build', {builds: builds, selected: selected})
+                        }
+                    });
+                });
+            });
+            reqGet.on('error', function (e) {
+                console.log('problem with request: ' + e.message);
+            });
+            reqGet.end();
         });
     });
 
@@ -418,8 +418,8 @@ module.exports = function (app, addon) {
                 });
             }
         });
-        var builds = [{'uri': artifactoryBuild}];
-        res.render('associate-artifactory-build', {builds: builds});
+        var selected = [{'uri': artifactoryBuild}];
+        res.render('associate-artifactory-build', {selected: selected});
     });
 
     app.get('/browse-package-versions', addon.authenticate(), function (originalReq, originalRes) {
@@ -779,7 +779,7 @@ module.exports = function (app, addon) {
                 console.log(" not found");
             } else {
                 var host_url = url.parse(data.url);
-                 options = {
+                options = {
                     host: host_url.hostname,
                     port: host_url.port || 80,
                     path: '/rest/api/latest/' + path,

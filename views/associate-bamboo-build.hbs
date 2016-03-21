@@ -11,6 +11,9 @@
                 {{/each}}
                 </select>
                 <div class="description">The relative build from Bamboo you'd like to associate</div>
+                {{#each selected}}
+                    Selected Build is: {{buildName}}
+                {{/each}}
             </div>
             <div class="buttons-container">
                 <div class="aui-buttons">

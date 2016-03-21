@@ -6,7 +6,7 @@
     "name": "JFrog",
     "url": "www.jfrog.com"
   },
-  "baseUrl": "https://62968825.ngrok.com",
+  "baseUrl": "https://1afa6cc0.ngrok.com",
   "authentication": {
     "type": "jwt"
   },

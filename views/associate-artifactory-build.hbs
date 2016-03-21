@@ -14,7 +14,11 @@
                     {{/each}}
                 </select>
                 <div class="description">The relative build from Artifactory you'd like to associate</div>
+                {{#each selected}}
+                    Selected Build is: {{uri}}
+                {{/each}}
             </div>
+
             <div class="buttons-container">
                 <div class="aui-buttons">
                     <button form="associate-artifactory-build" id="save-build" type="submit"
