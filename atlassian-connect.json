@@ -70,14 +70,6 @@
     ],
     "repoPage": [
       {
-        "key": "browse-package-versions",
-        "url": "/browse-package-versions?repoPath={repo_path}&repoUuid={repo_uuid}",
-        "name": {
-          "value": "Bintray Package"
-        },
-        "location": "org.bitbucket.repository.navigation"
-      },
-      {
         "key": "jfrog",
         "url": "/jfrog?repoPath={repo_path}&repoUuid={repo_uuid}&bitBucketUsername={user_username}",
         "name": {
