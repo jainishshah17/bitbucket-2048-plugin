@@ -270,8 +270,9 @@ module.exports = function (app, addon) {
                     rawData.push(chunk);
                 });
                 resGet.on('end', function (resGet) {
-                    reqGet.write(rawData);
+
                     var chunk = rawData.join('');
+                    reqGet.write(chunk);
                     parseString(chunk, function (err, result) {
                         var build_object_list = result.results.results["0"];
                         build_list = JSON.parse(JSON.stringify(build_object_list.result));
@@ -564,19 +565,29 @@ module.exports = function (app, addon) {
                                                 var number = buildInfo[key].buildNumber[0];
                                                 buildInfo[key].bitBucketUsername = bitBucketUsername;
                                                 buildInfo[key].buildLink = buildInfo[key].link["0"].$.href.replace("rest/api/latest/result", "browse");
-                                                artifactoryRequestOptions('build/' + data.artifactoryBuild + "/" + number, bitBucketUsername, function (artifactooryOptions) {
-                                                    var artiProtocol = artifactooryOptions.nameProtocol === "http" ? http : https;
-                                                    var reqGet = artiProtocol.request(artifactooryOptions, function (resGet) {
+                                                console.log(data.artifactoryBuild);
+                                                artifactoryRequestOptions('build' + data.artifactoryBuild + "/" + number, bitBucketUsername, function (artifactoryOptions) {
+                                                    console.log(artifactoryOptions.path);
+                                                    console.log(artifactoryOptions.host);
+                                                    console.log(artifactoryOptions.port);
+                                                    var artiProtocol = artifactoryOptions.nameProtocol === "http" ? http : https;
+                                                    var reqGet = artiProtocol.request(artifactoryOptions, function (resGet) {
                                                         console.log('STATUS: ' + resGet.statusCode);
                                                         resGet.setEncoding('utf8');
-                                                        var rawData = [];
+                                                        console.log("HEADERS:" + JSON.stringify(resGet.headers));
+                                                        var rawDataArti = [];
                                                         resGet.on('data', function (chunk) {
-                                                            rawData.push(chunk);
+                                                            rawDataArti.push(chunk);
                                                         });
                                                         resGet.on('end', function (resGet) {
-                                                            var chunk = rawData.join('');
-                                                            reqGet.write(chunk);
-                                                            var artBuildInfo = JSON.parse(chunk);
+                                                            var chunkArti = rawDataArti.join('');
+                                                            reqGet.write(chunkArti);
+                                                            console.log(number);
+                                                            if(chunkArti.indexOf("<") > -1){
+                                                                var artBuildInfo = " ";
+                                                            }else{
+                                                                var artBuildInfo = JSON.parse(chunkArti);
+                                                            }
                                                             if (artBuildInfo.buildInfo != undefined && artBuildInfo.buildInfo.name != undefined) {
                                                                 buildInfo[key].artName = artBuildInfo.buildInfo.name;
                                                             } else {
@@ -634,9 +645,6 @@ module.exports = function (app, addon) {
                                                                                 var chunk = output.join('');
                                                                                 if (chunk != "[]") {
                                                                                     var vesion = JSON.parse(chunk);
-                                                                                    vesion.sort(function (a, b) {
-                                                                                        return b.name - a.name;
-                                                                                    });
                                                                                     buildInfo[key].version = vesion[0].name;
                                                                                     buildInfo[key].repo = vesion[0].repo;
                                                                                     buildInfo[key].package = vesion[0].package;
@@ -645,6 +653,7 @@ module.exports = function (app, addon) {
                                                                                     buildInfo[key].version = " ";
                                                                                     buildInfo[key].repo = " ";
                                                                                     buildInfo[key].package = " ";
+                                                                                    buildInfo[key].owner = " ";
                                                                                 }
                                                                                 list_object.splice(list_object.indexOf(key), 1);
                                                                                 if (list_object.length == 0) {
