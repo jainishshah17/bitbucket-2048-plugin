@@ -362,7 +362,11 @@ module.exports = function (app, addon) {
                 resGet.on('end', function (resGet) {
                     var chunk = rawData.join('');
                     reqGet.write(chunk);
-                    var list = JSON.parse(chunk);
+                    if(chunk.indexOf("<") > -1){
+                        var list = " ";
+                    }else{
+                        var list = JSON.parse(chunk);
+                    }
                     builds = list["builds"];
                     var ArtifactoryBuild = getArtifactoryBuild();
                     ArtifactoryBuild.findOne({where: {bitBucketRepoUuid: repoUuid}}, function (err, data) {
