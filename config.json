@@ -3,7 +3,7 @@
     "bitbucket": true,
     "port": 3000,
     "errorTemplate": true,
-    "consumerKey": "SzLrhkDEmArss3jjVA",
+    "consumerKey": "GZNNqSGWu9gKrm9636",
     "store": {
       "adapter": "jugglingdb",
       "type": "sqlite3",
@@ -13,7 +13,7 @@
   "production": {
     "port": "$PORT",
     "bitbucket": true,
-    "consumerKey": "SzLrhkDEmArss3jjVA",
+    "consumerKey": "GZNNqSGWu9gKrm9636",
     "errorTemplate": true,
     "localBaseUrl": "https://your-subdomain.herokuapp.com",
     "store": {

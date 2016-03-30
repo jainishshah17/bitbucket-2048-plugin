@@ -6,7 +6,7 @@
     "name": "JFrog",
     "url": "www.jfrog.com"
   },
-  "baseUrl": "https://1afa6cc0.ngrok.com/",
+  "baseUrl": "https://c39d6a45.ngrok.io",
   "authentication": {
     "type": "jwt"
   },
@@ -75,12 +75,18 @@
         "name": {
           "value": "Jfrog"
         },
-        "location": "org.bitbucket.repository.navigation",
-        "params": {
-          "auiIcon": "aui-iconfont-view"
+        "location": "org.bitbucket.repository.actions",
+        "icon": {
+          "width": 16,
+          "height": 16,
+          "url": "/icon.png"
         }
       }
-    ]
+    ],
+    "postInstallRedirect": {
+      "key": "redirect",
+      "url": "/welcome.html?repoPath={repo_path}&repoUuid={repo_uuid}&bitBucketUsername={user_username}"
+    }
   },
   "scopes": [
     "account",

@@ -270,7 +270,6 @@ module.exports = function (app, addon) {
                     rawData.push(chunk);
                 });
                 resGet.on('end', function (resGet) {
-
                     var chunk = rawData.join('');
                     reqGet.write(chunk);
                     parseString(chunk, function (err, result) {
@@ -494,9 +493,9 @@ module.exports = function (app, addon) {
         var bitBucketUsername = originalRequest.params.bitBucketUsername;
         var buildName = originalRequest.params.buildName;
         var buildNumber = originalRequest.params.buildNumber;
-        var file_name = buildName + "_" + buildNumber + ".zip";
+        var file_name = buildName + "_" + buildNumber + ".tar.gz";
         var file = fs.createWriteStream(file_name);
-        var post_data = '{"buildName":"' + buildName + '","buildNumber":"' + buildNumber + '","archiveType":"zip"}';
+        var post_data = '{"buildName":"' + buildName + '","buildNumber":"' + buildNumber + '","archiveType":"tar.gz"}';
         artifactoryRequestOptions('/archive/buildArtifacts', bitBucketUsername, function (options) {
             options.headers = {
                 'Content-Type': 'application/json',
@@ -536,7 +535,7 @@ module.exports = function (app, addon) {
                 res.send('Error occurred while querying for an already existing associated Bamboo Build ' + err.message);
             }
             if (data == null) {
-                console.log("Bamboo build is not selected");
+                res.send("Bamboo build is not selected. Please Select Bamboo build");
             } else {
 
                 bambooRequestOptions('result/' + data.bambooBuildKey, bitBucketUsername, function (options) {
