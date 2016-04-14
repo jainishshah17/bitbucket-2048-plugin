@@ -5,6 +5,7 @@
 pipeline:
     - job:
         script: # Modify the commands below to build your repository.
+            - curl -sSL https://get.docker.com/ | sh
             - docker build -t jainishshah17/bitbucket-jfrog .
             - docker images
             - ls
