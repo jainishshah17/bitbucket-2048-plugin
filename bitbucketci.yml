@@ -6,7 +6,6 @@ pipeline:
     - job:
         script: # Modify the commands below to build your repository.
             - curl -sSL https://get.docker.com/ | sh
-            - sudo usermod -aG docker your-user
             - sudo docker build -t jainishshah17/bitbucket-jfrog .
             - sudo docker version
             - sudo docker images
