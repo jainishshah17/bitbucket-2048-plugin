@@ -1,0 +1,13 @@
+# This is a sample build configuration for Java.
+# Do not use tabs to indent your configuration.
+# You can specify a custom docker image from Dockerhub
+# for your build environment.
+pipeline:
+    - job:
+        script: # Modify the commands below to build your repository.
+            - curl -sSL https://get.docker.com/ | sh
+            - sudo docker build -t jainishshah17/bitbucket-jfrog .
+            - sudo docker version
+            - sudo docker images
+            - ls
+            - pwd
