@@ -12,6 +12,7 @@
     "atlassian-connect-express-bitbucket": "*",
     "jugglingdb": "0.2.x",
     "jugglingdb-sqlite3": "latest",
+    "jugglingdb-postgres": "latest",
     "http":"latest",
     "https":"latest",
     "url": "latest",

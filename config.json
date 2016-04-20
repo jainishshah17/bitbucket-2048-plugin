@@ -18,7 +18,7 @@
     "localBaseUrl": "https://your-subdomain.herokuapp.com",
     "store": {
       "type": "postgres",
-      "url": "$DATABASE_URL"
+      "url": "postgres://192.168.99.100:5432/"
     },
     "whitelist": [
       "*.jira-dev.com",

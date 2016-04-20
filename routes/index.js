@@ -361,9 +361,9 @@ module.exports = function (app, addon) {
                 resGet.on('end', function (resGet) {
                     var chunk = rawData.join('');
                     reqGet.write(chunk);
-                    if(chunk.indexOf("<") > -1){
+                    if (chunk.indexOf("<") > -1) {
                         var list = " ";
-                    }else{
+                    } else {
                         var list = JSON.parse(chunk);
                     }
                     builds = list["builds"];
@@ -535,9 +535,8 @@ module.exports = function (app, addon) {
                 res.send('Error occurred while querying for an already existing associated Bamboo Build ' + err.message);
             }
             if (data == null) {
-                res.send("Bamboo build is not selected. Please Select Bamboo build");
+                res.send('Bamboo build is not selected. Please Select Bamboo build');
             } else {
-
                 bambooRequestOptions('result/' + data.bambooBuildKey, bitBucketUsername, function (options) {
                     var protocol = options.nameProtocol === "http" ? http : https;
                     var reqBambooGet = protocol.request(options, function (resBambooGet) {
@@ -568,16 +567,16 @@ module.exports = function (app, addon) {
                                                 var number = buildInfo[key].buildNumber[0];
                                                 buildInfo[key].bitBucketUsername = bitBucketUsername;
                                                 buildInfo[key].buildLink = buildInfo[key].link["0"].$.href.replace("rest/api/latest/result", "browse");
-                                                console.log(data.artifactoryBuild);
+                                                //console.log(data.artifactoryBuild);
                                                 artifactoryRequestOptions('build' + data.artifactoryBuild + "/" + number, bitBucketUsername, function (artifactoryOptions) {
-                                                    console.log(artifactoryOptions.path);
-                                                    console.log(artifactoryOptions.host);
-                                                    console.log(artifactoryOptions.port);
+                                                    //console.log(artifactoryOptions.path);
+                                                    //console.log(artifactoryOptions.host);
+                                                    //console.log(artifactoryOptions.port);
                                                     var artiProtocol = artifactoryOptions.nameProtocol === "http" ? http : https;
                                                     var reqGet = artiProtocol.request(artifactoryOptions, function (resGet) {
                                                         console.log('STATUS: ' + resGet.statusCode);
                                                         resGet.setEncoding('utf8');
-                                                        console.log("HEADERS:" + JSON.stringify(resGet.headers));
+                                                        //console.log("HEADERS:" + JSON.stringify(resGet.headers));
                                                         var rawDataArti = [];
                                                         resGet.on('data', function (chunk) {
                                                             rawDataArti.push(chunk);
@@ -585,10 +584,10 @@ module.exports = function (app, addon) {
                                                         resGet.on('end', function (resGet) {
                                                             var chunkArti = rawDataArti.join('');
                                                             reqGet.write(chunkArti);
-                                                            console.log(number);
-                                                            if(chunkArti.indexOf("<") > -1){
+                                                            //console.log(number);
+                                                            if (chunkArti.indexOf("<") > -1) {
                                                                 var artBuildInfo = " ";
-                                                            }else{
+                                                            } else {
                                                                 var artBuildInfo = JSON.parse(chunkArti);
                                                             }
                                                             if (artBuildInfo.buildInfo != undefined && artBuildInfo.buildInfo.name != undefined) {
@@ -788,7 +787,7 @@ module.exports = function (app, addon) {
                 console.log('Error occurred while querying for an already existing associated Bamboo user: ' + err.message);
             }
             if (data == null) {
-                console.log(" not found");
+                console.log(" Bamboo user not found!");
             } else {
                 var host_url = url.parse(data.url);
                 options = {
