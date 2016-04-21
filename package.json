@@ -3,20 +3,21 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "AC_LOCAL_BASE_URL=https://c926652d.ngrok.io/ node app.js"
+    "start": "AC_LOCAL_BASE_URL=https://68b7ea53.ngrok.io node app.js"
   },
   "dependencies": {
+    "atlassian-connect-express-bitbucket": "*",
     "express": "~3.3.4",
     "express-hbs": "*",
-    "static-expiry": ">=0.0.5",
-    "atlassian-connect-express-bitbucket": "*",
+    "fs": "latest",
+    "http": "latest",
+    "https": "latest",
     "jugglingdb": "0.2.x",
+    "jugglingdb-postgres": "^0.1.0",
     "jugglingdb-sqlite3": "latest",
-    "jugglingdb-postgres": "latest",
-    "http":"latest",
-    "https":"latest",
+    "static-expiry": ">=0.0.5",
     "url": "latest",
-    "fs":"latest",
-    "xml2js":"latest"
+    "xml2js": "latest",
+    "url-parse": "latest"
   }
 }

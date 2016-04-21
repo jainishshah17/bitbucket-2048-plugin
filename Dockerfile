@@ -17,6 +17,7 @@ COPY public-key.pem /usr/src/app/
 COPY Procfile /usr/src/app/
 COPY package.json /usr/src/app/
 COPY app.js /usr/src/app/
+#COPY node_modules /usr/src/app/
 
 
 RUN npm install

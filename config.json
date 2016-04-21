@@ -6,8 +6,8 @@
     "consumerKey": "GZNNqSGWu9gKrm9636",
     "store": {
       "adapter": "jugglingdb",
-      "type": "sqlite3",
-      "database": "store.db"
+      "type": "postgres",
+      "url": "postgres://postgres:yiBhV2bv@104.154.17.82:5432/jfrog"
     }
   },
   "production": {

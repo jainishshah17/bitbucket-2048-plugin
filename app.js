@@ -4,16 +4,26 @@
 
 // web framework that `atlassian-connect-express` uses
 var express = require('express');
-
+var url = require('url-parse');
 var ac = require('atlassian-connect-express-bitbucket');
+
+var app = express();
+
+var addon = ac(app);
 
 // Static expiry middleware to help serve static resources efficiently
 process.env.PWD = process.env.PWD || process.cwd(); // Fix expiry on Windows :(
 var expiry = require('static-expiry');
 
 var Schema = require('jugglingdb').Schema;
-var schema = new Schema('sqlite3', {
-    database: ':memory:'
+
+var postgres = addon.config.store().url;
+var url = url(postgres);
+var schema = new Schema('postgres', {
+    database: url.pathname.replace('/',''),
+    username: url.username,
+    host: url.hostname,
+    password: url.password
 });
 
 var BintrayUser = schema.define('BintrayUser', {
@@ -93,10 +103,6 @@ var viewsDir = __dirname + '/views';
 
 var routes = require('./routes');
 
-var app = express();
-
-var addon = ac(app);
-
 var port = addon.config.port();
 
 var devEnv = app.get('env') == 'development';
@@ -161,7 +167,6 @@ hbs.registerHelper('compare', function (lvalue, operator, rvalue, options) {
 });
 app.use(app.router);
 app.use(express.static(staticDir));
-
 if (devEnv) app.use(express.errorHandler());
 
 // Wire up your routes using the express and `atlassian-connect-express` objects

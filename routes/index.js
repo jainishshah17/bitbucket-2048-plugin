@@ -535,7 +535,8 @@ module.exports = function (app, addon) {
                 res.send('Error occurred while querying for an already existing associated Bamboo Build ' + err.message);
             }
             if (data == null) {
-                res.send('Bamboo build is not selected. Please Select Bamboo build');
+                var message = 'Bamboo build is not selected. Please Select Bamboo build';
+                res.render('error',{message: message});
             } else {
                 bambooRequestOptions('result/' + data.bambooBuildKey, bitBucketUsername, function (options) {
                     var protocol = options.nameProtocol === "http" ? http : https;
