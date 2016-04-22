@@ -12,7 +12,7 @@ Congratulations! You've successfully created an Atlassian Connect Add-on using t
   </head>
   <body>
     <a class="aui-button aui-button-primary"
-          href="https://bitbucket.org/site/addons/authorize?descriptor_uri=https://c926652d.ngrok.io&redirect_uri=https://c926652d.ngrok.io/icon.png">
+          href="https://bitbucket.org/site/addons/authorize?descriptor_uri=https://ee2eeed9.ngrok.io/&redirect_uri=https://ee2eeed9.ngrok.io/welcome.html">
        <span class="aui-icon aui-icon-small aui-iconfont-bitbucket"></span>
        Connect to Bitbucket
     </a>
