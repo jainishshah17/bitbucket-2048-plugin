@@ -1,12 +1,12 @@
 {
-  "key": "bitbucket-jfrog-addon",
-  "name": "BitBucket Jfrog Add-On",
-  "description": "A Jfrog add-on for Atlassian Bitbucket",
+  "key": "bitbucket-2048-addon",
+  "name": "2048 Game Add-On",
+  "description": "A Game to refresh developer's mood",
   "vendor": {
-    "name": "JFrog",
-    "url": "www.jfrog.com"
+    "name": "Jainish Shah",
+    "url": "www.jainishshah.com"
   },
-  "baseUrl": "https://68b7ea53.ngrok.io/",
+  "baseUrl": "https://4f53fe4d.ngrok.io/",
   "authentication": {
     "type": "jwt"
   },
@@ -18,62 +18,12 @@
     "oauthConsumer": {
       "clientId": "{{consumerKey}}"
     },
-    "adminPage": [
-      {
-        "key": "associate-package",
-        "url": "/associate-package?repoPath={repo_path}&repoUuid={repo_uuid}&bitBucketUsername={user_username}",
-        "name": {
-          "value": "Associate Bintray Package"
-        },
-        "location": "org.bitbucket.repository.admin"
-      },
-      {
-        "key": "associate-bamboo-build",
-        "url": "/associate-bamboo-build?repoPath={repo_path}&repoUuid={repo_uuid}&bitBucketUsername={user_username}",
-        "name": {
-          "value": "Associate Bamboo Build"
-        },
-        "location": "org.bitbucket.repository.admin"
-      },
-      {
-        "key": "associate-artifactory-build",
-        "url": "/associate-artifactory-build?repoPath={repo_path}&repoUuid={repo_uuid}&bitBucketUsername={user_username}",
-        "name": {
-          "value": "Associate Artifactory Build"
-        },
-        "location": "org.bitbucket.repository.admin"
-      },
-      {
-        "key": "associate-user",
-        "url": "/associate-user?repoPath={repo_path}&bitBucketUsername={user_username}",
-        "name": {
-          "value": "Associate Bintray User"
-        },
-        "location": "org.bitbucket.account.admin"
-      },
-      {
-        "key": "artifactory-user",
-        "url": "/artifactory-user?repoPath={repo_path}&bitBucketUsername={user_username}",
-        "name": {
-          "value": "Associate Artifactory User"
-        },
-        "location": "org.bitbucket.account.admin"
-      },
-      {
-        "key": "bamboo-user",
-        "url": "/bamboo-user?repoPath={repo_path}&bitBucketUsername={user_username}",
-        "name": {
-          "value": "Associate Bamboo User"
-        },
-        "location": "org.bitbucket.account.admin"
-      }
-    ],
     "repoPage": [
       {
-        "key": "jfrog",
-        "url": "/jfrog?repoPath={repo_path}&repoUuid={repo_uuid}&bitBucketUsername={user_username}",
+        "key": "game",
+        "url": "/game?repoPath={repo_path}&repoUuid={repo_uuid}&bitBucketUsername={user_username}",
         "name": {
-          "value": "Jfrog"
+          "value": "game"
         },
         "location": "org.bitbucket.repository.actions",
         "icon": {

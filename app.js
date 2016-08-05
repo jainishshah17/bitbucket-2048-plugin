@@ -4,7 +4,7 @@
 
 // web framework that `atlassian-connect-express` uses
 var express = require('express');
-var url = require('url-parse');
+
 var ac = require('atlassian-connect-express-bitbucket');
 
 var app = express();
@@ -16,80 +16,14 @@ process.env.PWD = process.env.PWD || process.cwd(); // Fix expiry on Windows :(
 var expiry = require('static-expiry');
 
 var Schema = require('jugglingdb').Schema;
-
-var postgres = addon.config.store().url;
-var url = url(postgres);
-var schema = new Schema('postgres', {
-    database: url.pathname.replace('/',''),
-    username: url.username,
-    host: url.hostname,
-    password: url.password
+var schema = new Schema('sqlite3', {
+    database: ':memory:'
 });
-
-var BintrayUser = schema.define('BintrayUser', {
-    bitBucketUsername: String,
-    bintrayUsername: String,
-    apiKey: String
-});
-
-var ArtifactoryUser = schema.define('ArtifactoryUser', {
-    bitBucketUsername: String,
-    url: String,
-    artifactoryUsername: String,
-    password: String
-});
-var BambooUser = schema.define('BambooUser', {
-    bitBucketUsername: String,
-    url: String,
-    bambooUsername: String,
-    password: String
-});
-
-var BintrayPackage = schema.define('BintrayPackage', {
-    bitBucketRepoUuid: String,
-    bintrayPackage: String
-});
-
-var BambooBuild = schema.define('BambooBuild', {
-    bitBucketRepoUuid: String,
-    bambooBuildName: String,
-    bambooBuildKey: String
-});
-
-var ArtifactoryBuild = schema.define('ArtifactoryBuild', {
-    bitBucketRepoUuid: String,
-    artifactoryBuild: String
-});
-
 
 schema.autoupdate();
 
 global.getSchema = function () {
     return schema;
-};
-
-global.getBintrayUser = function () {
-    return BintrayUser;
-};
-
-global.getArtifactoryUser = function () {
-    return ArtifactoryUser;
-};
-
-global.getBambooUser = function () {
-    return BambooUser;
-};
-
-global.getBintrayPackage = function () {
-    return BintrayPackage;
-};
-
-global.getBambooBuild = function () {
-    return BambooBuild;
-};
-
-global.getArtifactoryBuild = function () {
-    return ArtifactoryBuild;
 };
 
 var hbs = require('express-hbs');
@@ -126,45 +60,6 @@ hbs.registerHelper('furl', function (url) {
     return app.locals.furl(url);
 });
 
-hbs.registerHelper('compare', function (lvalue, operator, rvalue, options) {
-
-    var operators, result;
-
-    if (arguments.length < 3) {
-        throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
-    }
-
-    if (options === undefined) {
-        options = rvalue;
-        rvalue = operator;
-        operator = "===";
-    }
-
-    operators = {
-        '==': function (l, r) { return l == r; },
-        '===': function (l, r) { return l === r; },
-        '!=': function (l, r) { return l != r; },
-        '!==': function (l, r) { return l !== r; },
-        '<': function (l, r) { return l < r; },
-        '>': function (l, r) { return l > r; },
-        '<=': function (l, r) { return l <= r; },
-        '>=': function (l, r) { return l >= r; },
-        'typeof': function (l, r) { return typeof l == r; }
-    };
-
-    if (!operators[operator]) {
-        throw new Error("Handlerbars Helper 'compare' doesn't know the operator " + operator);
-    }
-
-    result = operators[operator](lvalue, rvalue);
-
-    if (result) {
-        return options.fn(this);
-    } else {
-        return options.inverse(this);
-    }
-
-});
 app.use(app.router);
 app.use(express.static(staticDir));
 if (devEnv) app.use(express.errorHandler());
